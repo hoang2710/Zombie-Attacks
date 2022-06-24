@@ -5,8 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float LerpRotateSmooth = 5f;
-    const int LAYER_MASK_6 = 1 << 6;
     public Camera cam;
+    public Gun gun;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,20 +20,24 @@ public class Player : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit hit;
-        Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, LAYER_MASK_6);
+        Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, ConstValue.LAYER_MASK_PLAYER_POINTING);
 
-        if (hit.transform != null)
+
+        // this.transform.LookAt(hit.point);
+
+        Vector3 mouseDirection = hit.point - transform.position;
+        float angle = Mathf.Atan2(mouseDirection.x, mouseDirection.z) * Mathf.Rad2Deg;
+        Quaternion targetRotation = Quaternion.Euler(0, angle, 0);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * LerpRotateSmooth);
+
+
+        Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.yellow);
+
+        //fire weapon
+        if (Input.GetMouseButtonDown(0))
         {
-
-            // this.transform.LookAt(hit.point);
-
-            Vector3 mouseDirection = hit.point - transform.position;
-            float angle = Mathf.Atan2(mouseDirection.x, mouseDirection.z) * Mathf.Rad2Deg;
-            Quaternion targetRotation = Quaternion.Euler(0, angle, 0);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * LerpRotateSmooth);
-
+            gun.Fire();
         }
-        Debug.DrawRay(ray.origin, ray.direction*hit.distance, Color.yellow);
 
     }
 }
