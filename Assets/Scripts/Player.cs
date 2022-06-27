@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        UIManager.Instance.SetHealthBar(this.tag, transform);
     }
 
     // Update is called once per frame

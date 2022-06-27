@@ -4,8 +4,20 @@ using UnityEngine;
 
 public class PrefabManager : MonoBehaviour
 {
-    public enum PrefabType{
-        None = 0,
-        Enemy
+    public static PrefabManager Instance { get; private set; }
+
+    public GameObject[] EnemyPrefab;
+    public GameObject HealthPrefab;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

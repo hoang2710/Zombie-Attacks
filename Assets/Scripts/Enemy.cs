@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField]
     float _health = 100f;
+    private GameObject healthBar;
     public float Health
     {
         get
@@ -18,17 +19,27 @@ public class Enemy : MonoBehaviour
             {
                 _health = value;
             }
+            else
+            {
+                Die();
+            }
         }
     }
     // Start is called before the first frame update
     void Start()
     {
-
+        healthBar = UIManager.Instance.SetHealthBar(this.tag, transform);
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    void Die()
+    {
+        Destroy(healthBar);
+        Destroy(gameObject);
     }
 }

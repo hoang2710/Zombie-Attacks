@@ -4,18 +4,22 @@ using UnityEngine;
 
 public class Cam : MonoBehaviour
 {
-    Camera cam;
-    Vector3 pos = new Vector3(0, 0, 0);
-
+    GameObject player;
 
     void Start()
     {
-        cam = GetComponent<Camera>();
+        StartCoroutine(FindPlayer());
+
     }
 
-    void Update()
+    IEnumerator FindPlayer()
     {
-        Ray ray = cam.ScreenPointToRay(pos);
-        Debug.DrawRay(ray.origin, ray.direction * 10, Color.yellow);
+        while (player == null)
+        {
+            player = GameObject.FindGameObjectWithTag("Player");
+            transform.LookAt(player.transform.position);
+            Debug.Log("Camera pointed at player");
+            yield return null;
+        }
     }
 }

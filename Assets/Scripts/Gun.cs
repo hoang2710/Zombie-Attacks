@@ -30,10 +30,11 @@ public class Gun : MonoBehaviour
         Physics.Raycast(ray, out hit, Mathf.Infinity, ConstValue.LAYER_MASK_ENEMY);
         Debug.DrawRay(gunBase.position, hit.point - gunBase.position, Color.green, 2f);
 
-
-        Enemy enemy = hit.transform.GetComponent<Enemy>();
-        enemy.Health -= _damage;
-
+        if (hit.transform != null)
+        {
+            Enemy enemy = hit.transform.GetComponent<Enemy>();
+            enemy.Health -= _damage;
+        }
     }
 
 
