@@ -6,6 +6,9 @@ using System;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public GameManager.GameState curState;
+    public GameManager.GameState lastState;
+    private bool wasPause = false;
 
     private void Awake()
     {
@@ -31,6 +34,7 @@ public class GameManager : MonoBehaviour
         switch (state)
         {
             case GameState.Day:
+                OnGameStateDay();
                 break;
             case GameState.Night:
                 break;
@@ -38,11 +42,33 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.GameOver:
                 break;
+            case GameState.Pause:
+                OnGameStatePause();
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);
         }
 
+        lastState = curState;
+        curState = state;
+
         OnGameStateChanged?.Invoke(state);
+    }
+
+    private void OnGameStatePause()
+    {
+        Time.timeScale = 0;
+        wasPause = true;
+    }
+
+    public void OnGameStateDay()
+    {
+        if (wasPause)
+        {
+            Time.timeScale = 1;
+            wasPause = false;
+        }
+
     }
 
     public enum GameState
@@ -50,6 +76,7 @@ public class GameManager : MonoBehaviour
         Day,
         Night,
         Upgrade,
-        GameOver
+        GameOver,
+        Pause
     }
 }

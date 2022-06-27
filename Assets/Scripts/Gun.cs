@@ -5,11 +5,14 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
     [SerializeField]
-    Transform gunPoint;
+    private Transform gunPoint;
     [SerializeField]
-    Transform gunBase;
-    float _damage = 10f;
-    public float Damage
+    private Transform gunBase;
+    [SerializeField]
+    private float fireRate = 0.15f;
+    private float timer;
+    private int _damage = 10;
+    public int Damage
     {
         get
         {
@@ -23,17 +26,27 @@ public class Gun : MonoBehaviour
             }
         }
     }
+
+    void Start()
+    {
+        timer = Time.time;
+    }
     public void Fire()
     {
-        RaycastHit hit;
-        Ray ray = new Ray(gunBase.position, gunPoint.position - gunBase.position);
-        Physics.Raycast(ray, out hit, Mathf.Infinity, ConstValue.LAYER_MASK_ENEMY);
-        Debug.DrawRay(gunBase.position, hit.point - gunBase.position, Color.green, 2f);
-
-        if (hit.transform != null)
+        if (Time.time > timer)
         {
-            Enemy enemy = hit.transform.GetComponent<Enemy>();
-            enemy.Health -= _damage;
+            RaycastHit hit;
+            Ray ray = new Ray(gunBase.position, gunPoint.position - gunBase.position);
+            Physics.Raycast(ray, out hit, Mathf.Infinity, ConstValue.LAYER_MASK_ENEMY);
+            Debug.DrawRay(gunBase.position, hit.point - gunBase.position, Color.green, 2f);
+
+            if (hit.transform != null)
+            {
+                Enemy enemy = hit.transform.GetComponent<Enemy>();
+                enemy.Health -= _damage;
+            }
+
+            timer = Time.time + fireRate;
         }
     }
 

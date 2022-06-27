@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UIManager.Instance.SetHealthBar(this.tag, transform);
+        UIManager.Instance.SetHealthBar(transform);
     }
 
     // Update is called once per frame
@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.yellow);
 
         //fire weapon
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             gun.Fire();
         }

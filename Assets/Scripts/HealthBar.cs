@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    public Slider healthBar;
+    [SerializeField]
+    private Slider healthBar;
     [SerializeField]
     private Vector3 healthUIOffset;
     private Transform objectTransform;
@@ -14,8 +15,7 @@ public class HealthBar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-        StartCoroutine(FindObjectTransform());
+        healthBar = GetComponent<Slider>();
         StartCoroutine(UpdateLookAtCamera());
 
     }
@@ -25,14 +25,24 @@ public class HealthBar : MonoBehaviour
         transform.position = objectTransform.position + healthUIOffset;
     }
 
-    public void SetObjectTag(string tag)
+    public void SetObjectTransform(Transform trans)
     {
-        objectTag = tag;
+        objectTransform = trans;
+    }
+
+    public void SetHealthValue(int val)
+    {
+        healthBar.value = val;
+    }
+
+    public void SetMaxHealthValue(int val)
+    {
+        healthBar.maxValue = val;
     }
 
     IEnumerator UpdateLookAtCamera()
     {
-        int i = 60; //number of frame to update
+        int i = 10; //number of frame to update
         while (i-- >= 0)
         {
             transform.LookAt(transform.position - Camera.main.transform.position); //????
@@ -40,16 +50,4 @@ public class HealthBar : MonoBehaviour
         }
     }
 
-    IEnumerator FindObjectTransform()
-    {
-        while (objectTransform == null)
-        {
-            if (objectTag != null)
-            {
-                objectTransform = GameObject.FindGameObjectWithTag(objectTag).transform;
-            }
-            Debug.Log("Player found");
-            yield return null;
-        }
-    }
 }

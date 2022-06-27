@@ -5,9 +5,10 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
-    float _health = 100f;
-    private GameObject healthBar;
-    public float Health
+    private int _health = 100;
+    private int maxHealth = 100;
+    private HealthBar healthBar;
+    public int Health
     {
         get
         {
@@ -15,11 +16,12 @@ public class Enemy : MonoBehaviour
         }
         set
         {
-            if (_health > 0)
-            {
-                _health = value;
-            }
-            else
+            int damage = _health - value;
+            Debug.Log("trigger damage  " + damage);
+            UIManager.Instance.SpawnDamagePopUp(transform, damage);
+            _health = value;
+            healthBar.SetHealthValue(value);
+            if (_health <= 0)
             {
                 Die();
             }
@@ -28,7 +30,9 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        healthBar = UIManager.Instance.SetHealthBar(this.tag, transform);
+        healthBar = UIManager.Instance.SetHealthBar(transform).GetComponent<HealthBar>();
+        healthBar.SetHealthValue(_health);
+        healthBar.SetMaxHealthValue(maxHealth);
     }
 
     // Update is called once per frame
@@ -39,7 +43,7 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        Destroy(healthBar);
+        Destroy(healthBar.gameObject);
         Destroy(gameObject);
     }
 }
