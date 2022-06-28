@@ -22,9 +22,11 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-void Start(){
-    UIManager.Instance.UpDateScoreText(playerScore);
-}
+    void Start()
+    {
+        playerScore = 0;
+        UIManager.Instance.UpDateScoreText(playerScore);
+    }
     private void GameManagerOnGameStateChange(GameManager.GameState state)
     {
 

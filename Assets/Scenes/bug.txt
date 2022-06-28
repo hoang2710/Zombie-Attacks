@@ -1,2 +1,3 @@
 Audio setting not keep through scene -> ?
 Effect mute work shit -> effect enable method. 
+player score not reset after quit to main menu -> set =0 at start.
