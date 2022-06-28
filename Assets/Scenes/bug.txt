@@ -1,0 +1,2 @@
+Audio setting not keep through scene -> ?
+Effect mute work shit -> effect enable method. 

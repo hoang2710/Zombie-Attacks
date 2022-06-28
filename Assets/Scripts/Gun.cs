@@ -42,6 +42,8 @@ public class Gun : MonoBehaviour
             Physics.Raycast(ray, out hit, Mathf.Infinity, ConstValue.LAYER_MASK_ENEMY);
             Debug.DrawRay(gunBase.position, hit.point - gunBase.position, Color.green, 2f);
 
+            SoundManager.Instance.PlayEffect(SoundManager.Instance.audioClips[0]);
+
             if (hit.transform != null)
             {
                 Enemy enemy = hit.transform.GetComponent<Enemy>();
@@ -49,9 +51,11 @@ public class Gun : MonoBehaviour
                 lineRenderer.SetPosition(0, gunPoint.position);
                 lineRenderer.SetPosition(1, hit.point);
                 lineRenderer.enabled = true;
-            }else{
+            }
+            else
+            {
                 lineRenderer.SetPosition(0, gunPoint.position);
-                lineRenderer.SetPosition(1, gunPoint.position + 5000*(gunPoint.position-gunBase.position));
+                lineRenderer.SetPosition(1, gunPoint.position + 5000 * (gunPoint.position - gunBase.position));
                 lineRenderer.enabled = true;
             }
 

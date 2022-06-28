@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public float LerpRotateSmooth = 5f;
     private HealthBar healthBar;
     public Gun gun;
+    public bool isHealthBarVisible = true;
     [SerializeField]
     private int _health = 200;
     [SerializeField]
@@ -19,6 +20,7 @@ public class Player : MonoBehaviour
         }
         set
         {
+            SoundManager.Instance.PlayEffect(SoundManager.Instance.audioClips[1]);
             UIManager.Instance.SpawnDamagePopUp(transform, _health - value, 0);
             _health = value;
             healthBar.SetHealthValue(value);
@@ -31,9 +33,12 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        healthBar = UIManager.Instance.SetHealthBar(transform, 0).GetComponent<HealthBar>();
-        healthBar.SetMaxHealthValue(maxHealth);
-        healthBar.SetHealthValue(_health);
+        if (isHealthBarVisible)
+        {
+            healthBar = UIManager.Instance.SetHealthBar(transform, 0).GetComponent<HealthBar>();
+            healthBar.SetMaxHealthValue(maxHealth);
+            healthBar.SetHealthValue(_health);
+        }
     }
 
 

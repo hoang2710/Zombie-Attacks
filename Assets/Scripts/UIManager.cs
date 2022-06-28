@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public GameObject WorldSpaceUI;
     public GameObject PausePanel;
     public GameObject GameOverPanel;
-
+    public TMP_Text ScoreText;
+    public Slider VolumeSlider;
 
     public static UIManager Instance { get; private set; }
 
@@ -29,12 +32,15 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    void OnDestroy() {
+    void OnDestroy()
+    {
         GameManager.OnGameStateChanged -= GameManagerOnGameStateChange;
     }
 
-    private void GameManagerOnGameStateChange(GameManager.GameState state){
-        if(state == GameManager.GameState.GameOver){
+    private void GameManagerOnGameStateChange(GameManager.GameState state)
+    {
+        if (state == GameManager.GameState.GameOver)
+        {
             GameOverPanel.SetActive(true);
         }
     }
@@ -69,14 +75,33 @@ public class UIManager : MonoBehaviour
         Application.Quit();
     }
 
-    public void OnClickResumeButton(){
+    public void OnClickResumeButton()
+    {
         PausePanel.SetActive(false);
         GameManager.Instance.ChangeGameState(GameManager.GameState.Resume);
     }
 
-    public void OnClickPauseButton(){
+    public void OnClickPauseButton()
+    {
         PausePanel.SetActive(true);
         GameManager.Instance.ChangeGameState(GameManager.GameState.Pause);
     }
+
+    public void UpDateScoreText(int score)
+    {
+        ScoreText.text = "Score: " + score.ToString();
+    }
+
+public void VolumeBarUpdate(float val){
+    SoundManager.Instance.ChangeMasterVolume(val);
+}
+
+public void MusicToggle(bool val){
+    SoundManager.Instance.MusicToggle(val);
+}
+
+public void EffectToggle(bool val){
+    SoundManager.Instance.EffectToggle(val);
+}
 
 }

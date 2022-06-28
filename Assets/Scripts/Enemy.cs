@@ -11,6 +11,8 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private int damage = 10;
     [SerializeField]
+    private int enemyScore = 10;
+    [SerializeField]
     private float attackRate = 2f;
     private float timer;
     private Player player;
@@ -26,6 +28,7 @@ public class Enemy : MonoBehaviour
         }
         set
         {
+            SoundManager.Instance.PlayEffect(SoundManager.Instance.audioClips[1]);
             int damage = _health - value;
             Debug.Log("trigger damage  " + damage);
             UIManager.Instance.SpawnDamagePopUp(transform, damage, 1);
@@ -65,6 +68,7 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        ScoreManager.Instance.GetScore(enemyScore);
         Destroy(healthBar.gameObject);
         Destroy(gameObject);
     }

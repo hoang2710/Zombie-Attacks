@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
         switch (state)
         {
             case GameState.StartMenu:
-            OnGameStateStartMenu();
+                OnGameStateStartMenu();
                 break;
             case GameState.Day:
                 OnGameStateDay();
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
             case GameState.Pause:
                 OnGameStatePause();
                 break;
-                case GameState.Resume:
+            case GameState.Resume:
                 OnGameStateResume();
                 break;
             default:
@@ -58,20 +58,21 @@ public class GameManager : MonoBehaviour
         OnGameStateChanged?.Invoke(state);
     }
 
-    private void OnGameStateStartMenu(){
-        
+    private void OnGameStateStartMenu()
+    {
+        Time.timeScale = 1;
     }
     private void OnGameStateDay()
     {
-
+        Time.timeScale = 1;
     }
     private void OnGameStateNight()
     {
-
+        Time.timeScale = 1;
     }
     private void OnGameStateUpgrade()
     {
-        
+        Time.timeScale = 1;
     }
     private void OnGameStateGameOver()
     {
@@ -81,7 +82,8 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
     }
-    private void OnGameStateResume(){
+    private void OnGameStateResume()
+    {
         Time.timeScale = 1;
     }
 
