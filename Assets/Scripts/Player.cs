@@ -5,13 +5,38 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float LerpRotateSmooth = 5f;
-    public Camera cam;
+    private HealthBar healthBar;
     public Gun gun;
+    [SerializeField]
+    private int _health = 200;
+    [SerializeField]
+    private int maxHealth = 200;
+    public int Health
+    {
+        get
+        {
+            return _health;
+        }
+        set
+        {
+            UIManager.Instance.SpawnDamagePopUp(transform, _health - value, 0);
+            _health = value;
+            healthBar.SetHealthValue(value);
+            if (_health <= 0)
+            {
+                GameManager.Instance.ChangeGameState(GameManager.GameState.GameOver);
+            }
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
-        UIManager.Instance.SetHealthBar(transform);
+        healthBar = UIManager.Instance.SetHealthBar(transform, 0).GetComponent<HealthBar>();
+        healthBar.SetMaxHealthValue(maxHealth);
+        healthBar.SetHealthValue(_health);
     }
+
+
 
     // Update is called once per frame
     void Update()

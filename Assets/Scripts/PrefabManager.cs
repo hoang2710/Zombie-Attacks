@@ -7,8 +7,8 @@ public class PrefabManager : MonoBehaviour
     public static PrefabManager Instance { get; private set; }
 
     public GameObject[] EnemyPrefab;
-    public GameObject HealthPrefab;
-    public GameObject DamagePopUpPrefabs;
+    public GameObject[] HealthPrefab;
+    public GameObject[] DamagePopUpPrefabs;
     private void Awake()
     {
         if (Instance == null)

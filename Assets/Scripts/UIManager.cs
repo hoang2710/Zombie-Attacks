@@ -7,12 +7,15 @@ public class UIManager : MonoBehaviour
 {
     public GameObject WorldSpaceUI;
     public GameObject PausePanel;
+    public GameObject GameOverPanel;
 
 
     public static UIManager Instance { get; private set; }
 
     private void Awake()
     {
+        GameManager.OnGameStateChanged += GameManagerOnGameStateChange;
+
         if (Instance == null)
         {
             Instance = this;
@@ -20,35 +23,45 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(Instance.gameObject);
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
     }
-    void Start()
-    {
-        WorldSpaceUI = GameObject.FindGameObjectWithTag("World Space UI");
+
+    void OnDestroy() {
+        GameManager.OnGameStateChanged -= GameManagerOnGameStateChange;
     }
 
-    public GameObject SetHealthBar(Transform trans)
+    private void GameManagerOnGameStateChange(GameManager.GameState state){
+        if(state == GameManager.GameState.GameOver){
+            GameOverPanel.SetActive(true);
+        }
+    }
+
+    public GameObject SetHealthBar(Transform trans, int type)
     {
-        HealthBar healthBar = Instantiate(PrefabManager.Instance.HealthPrefab, trans.position, Quaternion.identity, WorldSpaceUI.transform).GetComponent<HealthBar>();
+        HealthBar healthBar = Instantiate(PrefabManager.Instance.HealthPrefab[type], trans.position, Quaternion.identity, WorldSpaceUI.transform).GetComponent<HealthBar>();
         healthBar.SetObjectTransform(trans);
         return healthBar.gameObject;
     }
 
-    public void SpawnDamagePopUp(Transform trans, int damage)
+    public void SpawnDamagePopUp(Transform trans, int damage, int type)
     {
-        DamagePopUp item = Instantiate(PrefabManager.Instance.DamagePopUpPrefabs, trans.position, Quaternion.identity, WorldSpaceUI.transform).GetComponent<DamagePopUp>();
+        DamagePopUp item = Instantiate(PrefabManager.Instance.DamagePopUpPrefabs[type], trans.position, Quaternion.identity, WorldSpaceUI.transform).GetComponent<DamagePopUp>();
         item.SetDamageText(damage);
     }
 
     public void OnClickPlayButton()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        GameManager.Instance.ChangeGameState(GameManager.GameState.Day);
     }
 
     public void OnClickBackButton()
     {
         SceneManager.LoadScene(0);
+        GameManager.Instance.ChangeGameState(GameManager.GameState.StartMenu);
     }
 
     public void OnClickQuitButton()
@@ -58,11 +71,12 @@ public class UIManager : MonoBehaviour
 
     public void OnClickResumeButton(){
         PausePanel.SetActive(false);
-        GameManager.Instance.ChangeGameState(GameManager.Instance.lastState);
+        GameManager.Instance.ChangeGameState(GameManager.GameState.Resume);
     }
 
     public void OnClickPauseButton(){
         PausePanel.SetActive(true);
         GameManager.Instance.ChangeGameState(GameManager.GameState.Pause);
     }
+
 }

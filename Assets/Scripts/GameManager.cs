@@ -6,9 +6,6 @@ using System;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public GameManager.GameState curState;
-    public GameManager.GameState lastState;
-    private bool wasPause = false;
 
     private void Awake()
     {
@@ -27,56 +24,75 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        ChangeGameState(GameState.Day);
+        ChangeGameState(GameState.StartMenu);
     }
     public void ChangeGameState(GameState state)
     {
         switch (state)
         {
+            case GameState.StartMenu:
+            OnGameStateStartMenu();
+                break;
             case GameState.Day:
                 OnGameStateDay();
                 break;
             case GameState.Night:
+                OnGameStateNight();
                 break;
             case GameState.Upgrade:
+                OnGameStateUpgrade();
                 break;
             case GameState.GameOver:
+                OnGameStateGameOver();
                 break;
             case GameState.Pause:
                 OnGameStatePause();
+                break;
+                case GameState.Resume:
+                OnGameStateResume();
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);
         }
 
-        lastState = curState;
-        curState = state;
-
         OnGameStateChanged?.Invoke(state);
     }
 
+    private void OnGameStateStartMenu(){
+        
+    }
+    private void OnGameStateDay()
+    {
+
+    }
+    private void OnGameStateNight()
+    {
+
+    }
+    private void OnGameStateUpgrade()
+    {
+        
+    }
+    private void OnGameStateGameOver()
+    {
+        Time.timeScale = 0;
+    }
     private void OnGameStatePause()
     {
         Time.timeScale = 0;
-        wasPause = true;
     }
-
-    public void OnGameStateDay()
-    {
-        if (wasPause)
-        {
-            Time.timeScale = 1;
-            wasPause = false;
-        }
-
+    private void OnGameStateResume(){
+        Time.timeScale = 1;
     }
 
     public enum GameState
     {
+        StartMenu,
         Day,
         Night,
         Upgrade,
         GameOver,
-        Pause
+        Pause,
+        Resume
     }
 }

@@ -12,7 +12,10 @@ public class EnemySpawner : MonoBehaviour
     float spawnRate = 2f;
     float timer;
 
-
+    void Awake()
+    {
+        GameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -22,11 +25,22 @@ public class EnemySpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Time.time > timer){
+        if (Time.time > timer)
+        {
             SpawnEnemy();
             timer = Time.time + spawnRate;
         }
-        
+
+    }
+
+    void OnDestroy()
+    {
+        GameManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
+    }
+
+    private void GameManagerOnGameStateChanged(GameManager.GameState state)
+    {
+
     }
 
     void SpawnEnemy()

@@ -8,6 +8,7 @@ public class Gun : MonoBehaviour
     private Transform gunPoint;
     [SerializeField]
     private Transform gunBase;
+    public LineRenderer lineRenderer;
     [SerializeField]
     private float fireRate = 0.15f;
     private float timer;
@@ -30,6 +31,7 @@ public class Gun : MonoBehaviour
     void Start()
     {
         timer = Time.time;
+        lineRenderer.enabled = false;
     }
     public void Fire()
     {
@@ -44,11 +46,27 @@ public class Gun : MonoBehaviour
             {
                 Enemy enemy = hit.transform.GetComponent<Enemy>();
                 enemy.Health -= _damage;
+                lineRenderer.SetPosition(0, gunPoint.position);
+                lineRenderer.SetPosition(1, hit.point);
+                lineRenderer.enabled = true;
+            }else{
+                lineRenderer.SetPosition(0, gunPoint.position);
+                lineRenderer.SetPosition(1, gunPoint.position + 5000*(gunPoint.position-gunBase.position));
+                lineRenderer.enabled = true;
             }
 
             timer = Time.time + fireRate;
+            StartCoroutine(GunLineDisappear(5));
         }
     }
 
+    IEnumerator GunLineDisappear(int num) //number of frame to disappear
+    {
+        while (num-- >= 0)
+        {
+            yield return null;
+        }
+        lineRenderer.enabled = false;
+    }
 
 }
